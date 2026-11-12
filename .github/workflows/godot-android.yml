@@ -19,7 +19,7 @@ jobs:
       - name: Install Android SDK packages
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-35" "build-tools;35.0.0" "platforms;android-34" "build-tools;34.0.0"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-35" "build-tools;35.0.0" "build-tools;35.0.1" "platforms;android-34" "build-tools;34.0.0"
       - name: Install Godot 4.3 and export templates
         run: |
           curl -fL --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip"
@@ -54,7 +54,7 @@ jobs:
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p godot/build
-          godot --headless --path godot --export-debug Android build/LAST-ZONE-3D.apk
+          godot --headless --path godot --export-debug Android build/LAST-ZONE-3D.apk --verbose
           test -s godot/build/LAST-ZONE-3D.apk
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify godot/build/LAST-ZONE-3D.apk
       - uses: actions/upload-artifact@v4
