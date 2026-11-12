@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
   @Override protected void onDraw(Canvas c){super.onDraw(c);screenW=getWidth();screenH=getHeight();float w=screenW,h=screenH;update();if(mode==0){rect(c,0,0,w,h,Color.rgb(10,18,27));txt(c,"LAST ZONE",w*.10f,h*.31f,(int)(h*.12f),Color.WHITE);txt(c,"BLACK SIGNAL",w*.11f,h*.42f,(int)(h*.07f),Color.rgb(226,174,71));txt(c,"GOREV 01  /  KARA INIS",w*.11f,h*.55f,23,Color.LTGRAY);rect(c,w*.11f,h*.64f,w*.53f,h*.82f,Color.rgb(208,151,43));txt(c,"HIZLI MAC  >  BASLA",w*.14f,h*.76f,25,Color.BLACK);txt(c,"ONLINE MOD: GELISTIRILIYOR",w*.6f,h*.75f,18,Color.LTGRAY);}
   else {scene(c,w,h);rect(c,0,0,w,h*.14f,0xCC0B1723);rect(c,0,h*.14f,w,h*.145f,0xFFBA8B42);
    txt(c,"LAST ZONE",22,34,24,Color.WHITE);txt(c,mission==2?"BLACK SIGNAL  /  SESSIZ TESIS":"BLACK SIGNAL  /  KARA INIS",23,53,12,0xFFC3D4DD);
-   txt(c,"CAN "+hp+"   |   HEDEF "+kills+"/"+targetCount()+",w*.43f,35,20,Color.WHITE);
+   txt(c,"CAN "+hp+"   |   HEDEF "+kills+"/"+targetCount(),w*.43f,35,20,Color.WHITE);
    rect(c,w*.43f,h*.102f,w*.69f,h*.117f,0xFF334A50);rect(c,w*.43f,h*.102f,w*(.43f+.26f*hp/100f),h*.117f,0xFF56D1A0);
    txt(c,ammo+" / "+reserve,w*.85f,35,23,Color.rgb(247,196,67));circle(c,w*.13f,h*.77f,h*.17f,0x55444444);circle(c,w*.13f+joyDX*h*.12f,h*.77f+joyDY*h*.12f,h*.073f,0xAAFFFFFF);circle(c,w*.88f,h*.72f,h*.125f,0xBB9D3C27);circle(c,w*.88f,h*.72f,h*.102f,0xBBCC5834);
    // Bullet icon: brass cartridge with rounded tip
