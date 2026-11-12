@@ -19,7 +19,6 @@ jobs:
           gradle-version: '8.9'
       - name: Configure Android SDK
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
           if [ ! -x "$SDKMANAGER" ]; then
             SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -name sdkmanager -type f | head -n 1)"
@@ -28,8 +27,15 @@ jobs:
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
       - name: Build debug APK
-        run: gradle :app:assembleDebug --no-daemon
+        run: gradle clean :app:assembleDebug --no-daemon
+      - name: Verify APK signature and package
+        run: |
+          APK=app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs "$APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | head -n 12
+          ls -lh "$APK"
       - uses: actions/upload-artifact@v4
         with:
-          name: TruckPilot-debug-APK
+          name: TruckPilot-v0.2-verified-APK
           path: app/build/outputs/apk/debug/app-debug.apk
