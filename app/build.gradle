@@ -1,19 +1,7 @@
 plugins { id 'com.android.application' }
 android {
- namespace 'com.truckpilot.app'
+ namespace 'com.velora.stream'
  compileSdk 35
- defaultConfig {
-   applicationId 'com.truckpilot.app'
-   minSdk 24
-   targetSdk 35
-   versionCode 2
-   versionName '0.2'
- }
- buildTypes {
-   debug {
-     signingConfig signingConfigs.debug
-     enableAndroidTestCoverage false
-   }
- }
+ defaultConfig { applicationId 'com.velora.stream'; minSdk 24; targetSdk 35; versionCode 1; versionName '0.1' }
  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
 }
