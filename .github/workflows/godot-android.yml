@@ -43,10 +43,19 @@ jobs:
           [resource]
           export/android/android_sdk_path = "$ANDROID_HOME"
           export/android/java_sdk_path = "$JAVA_HOME"
+          export/android/debug_keystore = "$HOME/.android/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
           EOF
       - name: Import project and check script parsing
         run: |
           godot --headless --path godot --editor --import --quit
+          echo "Godot settings:"
+          cat "$HOME/.config/godot/editor_settings-4.tres"
+          echo "SDK platforms:"
+          ls "$ANDROID_HOME/platforms"
+          echo "Export templates:"
+          ls -lh "$HOME/.local/share/godot/export_templates/4.3.stable/" | head
       - name: Export Android debug APK
         env:
           GODOT_ANDROID_KEYSTORE_DEBUG_PATH: /home/runner/.android/debug.keystore
