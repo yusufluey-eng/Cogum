@@ -75,6 +75,11 @@ jobs:
           test -f "$ANDROID_HOME/build-tools/35.0.0/apksigner"
           echo "Using Godot 4.3 Android export with configured debug signing"
           test -f "$HOME/.android/debug.keystore"
+          echo "Validating Android SDK tools and signing certificate"
+          test -x "$ANDROID_HOME/platform-tools/adb"
+          test -f "$ANDROID_HOME/build-tools/34.0.0/zipalign"
+          keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey
+          echo "Exporting Godot Android debug APK"
           godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk
           test -s godot/build/LAST-ZONE-3D.apk
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify godot/build/LAST-ZONE-3D.apk
@@ -82,3 +87,4 @@ jobs:
         with:
           name: LAST-ZONE-GODOT-3D-APK
           path: godot/build/LAST-ZONE-3D.apk
+          if-no-files-found: error
