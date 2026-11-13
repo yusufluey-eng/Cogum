@@ -1,4 +1,5 @@
 name: LAST ZONE Godot 3D APK
+# Rebuild requested after Android signing preset correction
 on:
   workflow_dispatch:
   push:
