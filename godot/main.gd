@@ -25,6 +25,8 @@ var reload_button: Button
 var joystick: ColorRect
 var crosshair: Label
 var cooldown := 0.0
+var total_enemies := 5
+var weapon_flash := 0.0
 
 func _ready() -> void:
 	_build_world()
@@ -166,6 +168,7 @@ func _build_ui() -> void:
 	reload_button.pressed.connect(_reload)
 
 func _process(delta: float) -> void:
+	weapon_flash = maxf(0.0, weapon_flash - delta)
 	cooldown = maxf(0.0, cooldown - delta)
 	if firing and cooldown <= 0:
 		_shoot()
@@ -176,7 +179,9 @@ func _physics_process(delta: float) -> void:
 	camera.rotation.x = pitch
 	var forward := -player.global_transform.basis.z
 	var right := player.global_transform.basis.x
-	var direction := forward * -move_axis.y + right * move_axis.x
+	var keyboard_axis := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var active_axis := move_axis if move_axis.length_squared() > 0.001 else keyboard_axis
+	var direction := forward * -active_axis.y + right * active_axis.x
 	player.velocity.x = direction.x * SPEED
 	player.velocity.z = direction.z * SPEED
 	player.velocity.y -= 16.0 * delta
@@ -187,6 +192,7 @@ func _shoot() -> void:
 		return
 	ammo -= 1
 	cooldown = 0.18
+	weapon_flash = 0.08
 	var from := camera.global_position
 	var to := from - camera.global_transform.basis.z * 75.0
 	var query := PhysicsRayQueryParameters3D.create(from, to)
@@ -200,7 +206,7 @@ func _shoot() -> void:
 			if health <= 0:
 				target.queue_free()
 				kills += 1
-				if kills == 5:
+				if kills == total_enemies:
 					message.text = "GOREV TAMAMLANDI!"
 
 func _reload() -> void:
@@ -209,16 +215,16 @@ func _reload() -> void:
 	reserve -= amount
 
 func _refresh_hud() -> void:
-	hud.text = "LAST ZONE  |  HEDEF %d/5  |  %d / %d" % [kills, ammo, reserve]
+	hud.text = "LAST ZONE  |  HEDEF %d/%d  |  %d / %d" % [kills, total_enemies, ammo, reserve]
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		var t := event as InputEventScreenTouch
 		if t.pressed:
-			if t.position.x < 460 and t.position.y > 350 and move_touch == -1:
+			if t.position.x < get_viewport().get_visible_rect().size.x * 0.38 and t.position.y > get_viewport().get_visible_rect().size.y * 0.42 and move_touch == -1:
 				move_touch = t.index
 				joy_start = t.position
-			elif t.position.x > 460 and t.position.x < 900 and look_touch == -1:
+			elif t.position.x > get_viewport().get_visible_rect().size.x * 0.38 and look_touch == -1 and not _touch_over_buttons(t.position):
 				look_touch = t.index
 		else:
 			if t.index == move_touch:
@@ -241,3 +247,6 @@ func _input(event: InputEvent) -> void:
 		var k := event as InputEventKey
 		if k.pressed and k.keycode == KEY_R:
 			_reload()
+
+func _touch_over_buttons(point: Vector2) -> bool:
+	return fire_button.get_global_rect().has_point(point) or reload_button.get_global_rect().has_point(point)
