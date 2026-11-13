@@ -20,7 +20,7 @@ jobs:
       - name: Install Android SDK packages
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-35" "build-tools;35.0.0" "build-tools;35.0.1" "platforms;android-34" "build-tools;34.0.0" "platforms;android-33" "build-tools;33.0.2"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-35" "build-tools;35.0.0" "build-tools;35.0.1" "platforms;android-34" "build-tools;34.0.0" "platforms;android-33" "build-tools;33.0.2" "ndk;23.2.8568313" "cmake;3.10.2.4988404"
       - name: Install Godot 4.3 and export templates
         run: |
           curl -fL --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip"
@@ -79,6 +79,8 @@ jobs:
           test -x "$ANDROID_HOME/platform-tools/adb"
           test -f "$ANDROID_HOME/build-tools/34.0.0/zipalign"
           keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey
+          echo "Android NDK/CMake installation:"
+          ls -la "$ANDROID_HOME/ndk" "$ANDROID_HOME/cmake" || true
           echo "Exporting Godot Android debug APK"
           echo "Godot Android export settings:"
           grep -E "export/android|debug_keystore" "$HOME/.config/godot/editor_settings-4.tres" || true
