@@ -66,6 +66,13 @@ jobs:
         run: |
           mkdir -p godot/build
           godot --headless --path godot --editor --import --quit
+          echo "Effective Godot settings after editor startup:"
+          grep -E "export/android|debug_keystore" "$HOME/.config/godot/editor_settings-4.tres" || true
+          echo "Android export template files:"
+          ls -l "$HOME/.local/share/godot/export_templates/4.3.stable/"/*android* || true
+          echo "Android SDK and Java checks:"
+          test -f "$ANDROID_HOME/build-tools/35.0.0/apksigner"
+          test -f "$HOME/.android/debug.keystore"
           godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk
           test -s godot/build/LAST-ZONE-3D.apk
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify godot/build/LAST-ZONE-3D.apk
