@@ -72,21 +72,8 @@ jobs:
           ls -l "$HOME/.local/share/godot/export_templates/4.3.stable/"/*android* || true
           echo "Android SDK and Java checks:"
           test -f "$ANDROID_HOME/build-tools/35.0.0/apksigner"
+          echo "Using Godot 4.3 Android export with installed SDK and default debug signing"
           test -f "$HOME/.android/debug.keystore"
-          echo "Check Android export configuration through Godot EditorScript:"
-          cat > godot/export_diagnostics.gd <<'GDSCRIPT'
-          extends EditorScript
-          func _run():
-              print("DIAG: export presets=", EditorExport.get_export_preset_count())
-              for i in range(EditorExport.get_export_preset_count()):
-                  var preset = EditorExport.get_export_preset(i)
-                  var platform = preset.get_platform()
-                  print("DIAG: preset=", preset.get_name(), " platform=", platform.get_name())
-                  print("DIAG: valid=", platform.has_valid_export_configuration(preset))
-                  print("DIAG: project_valid=", platform.has_valid_project_configuration(preset))
-          GDSCRIPT
-          godot --headless --path godot --editor --script res://export_diagnostics.gd || true
-          rm -f godot/export_diagnostics.gd
           godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk
           test -s godot/build/LAST-ZONE-3D.apk
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify godot/build/LAST-ZONE-3D.apk
