@@ -80,6 +80,8 @@ jobs:
           test -f "$ANDROID_HOME/build-tools/34.0.0/zipalign"
           keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey
           echo "Exporting Godot Android debug APK"
+          echo "Godot Android export settings:"
+          grep -E "export/android|debug_keystore" "$HOME/.config/godot/editor_settings-4.tres" || true
           set -o pipefail
           godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk 2>&1 | tee /tmp/last-zone-export.log
           test -s godot/build/LAST-ZONE-3D.apk
