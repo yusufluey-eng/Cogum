@@ -66,7 +66,7 @@ jobs:
         run: |
           mkdir -p godot/build
           godot --headless --path godot --editor --import --quit
-          godot --headless --path godot --editor --export-debug Android build/LAST-ZONE-3D.apk --verbose
+          godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk
           test -s godot/build/LAST-ZONE-3D.apk
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify godot/build/LAST-ZONE-3D.apk
       - uses: actions/upload-artifact@v4
