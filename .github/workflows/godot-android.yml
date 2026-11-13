@@ -50,7 +50,7 @@ jobs:
           EOF
       - name: Import project and check script parsing
         run: |
-          godot --headless --path godot --editor --import --quit
+          godot --headless --path godot --editor --import --quit --verbose
           echo "Godot settings:"
           cat "$HOME/.config/godot/editor_settings-4.tres"
           echo "Godot export preset:"
@@ -80,9 +80,18 @@ jobs:
           test -f "$ANDROID_HOME/build-tools/34.0.0/zipalign"
           keytool -list -keystore "$HOME/.android/debug.keystore" -storepass android -alias androiddebugkey
           echo "Exporting Godot Android debug APK"
-          godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk
+          set -o pipefail
+          godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk 2>&1 | tee /tmp/last-zone-export.log
+          test -s godot/build/LAST-ZONE-3D.apk
           test -s godot/build/LAST-ZONE-3D.apk
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify godot/build/LAST-ZONE-3D.apk
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LAST-ZONE-ANDROID-ERROR-LOG
+          path: /tmp/last-zone-export.log
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
           name: LAST-ZONE-GODOT-3D-APK
