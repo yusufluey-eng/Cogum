@@ -1,5 +1,5 @@
 name: LAST ZONE Godot 3D APK
-# Rebuild requested after Android signing preset correction
+# Rebuild requested: verify Godot Android APK signing and artifact
 on:
   workflow_dispatch:
   push:
@@ -73,7 +73,7 @@ jobs:
           ls -l "$HOME/.local/share/godot/export_templates/4.3.stable/"/*android* || true
           echo "Android SDK and Java checks:"
           test -f "$ANDROID_HOME/build-tools/35.0.0/apksigner"
-          echo "Using Godot 4.3 Android export with installed SDK and default debug signing"
+          echo "Using Godot 4.3 Android export with configured debug signing"
           test -f "$HOME/.android/debug.keystore"
           godot --headless --verbose --path godot --export-debug "Android" build/LAST-ZONE-3D.apk
           test -s godot/build/LAST-ZONE-3D.apk
