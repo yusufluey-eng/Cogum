@@ -50,6 +50,21 @@ jobs:
           EOF
       - name: Import clean project
         run: godot --headless --path clean-zone --editor --import --quit
+      - name: Diagnose Android export configuration
+        run: |
+          echo "=== Godot version and templates ==="
+          godot --version
+          ls -lah "$HOME/.local/share/godot/export_templates/4.3.stable/"
+          echo "=== Android SDK tools ==="
+          ls -ld "$ANDROID_HOME" "$ANDROID_HOME/platforms/android-34" "$ANDROID_HOME/build-tools/34.0.0" "$JAVA_HOME"
+          echo "=== Editor settings (credentials redacted) ==="
+          sed -E '/(password|pass|keystore_user)/d' "$HOME/.config/godot/editor_settings-4.tres"
+          echo "=== Export preset (credentials redacted) ==="
+          sed -E '/(password|keystore\/debug_user)/d' clean-zone/export_presets.cfg
+          echo "=== Debug keystore ==="
+          test -s "$HOME/.android/debug.keystore"
+          echo "=== Godot editor diagnostics ==="
+          godot --headless --verbose --path clean-zone --editor --quit || true
       - name: Export Android debug APK
         env:
           GODOT_ANDROID_KEYSTORE_DEBUG_PATH: /home/runner/.android/debug.keystore
