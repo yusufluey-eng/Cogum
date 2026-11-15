@@ -65,6 +65,11 @@ jobs:
           test -s "$HOME/.android/debug.keystore"
           echo "=== Godot editor diagnostics ==="
           godot --headless --verbose --path clean-zone --editor --quit || true
+      - name: Start Android Debug Bridge
+        run: |
+          unset ADB_SERVER_SOCKET
+          "$ANDROID_HOME/platform-tools/adb" start-server
+          "$ANDROID_HOME/platform-tools/adb" devices
       - name: Export Android debug APK
         env:
           GODOT_ANDROID_KEYSTORE_DEBUG_PATH: /home/runner/.android/debug.keystore
