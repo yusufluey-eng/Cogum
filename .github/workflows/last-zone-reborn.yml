@@ -63,6 +63,8 @@ jobs:
           sed -E '/(password|keystore\/debug_user)/d' clean-zone/export_presets.cfg
           echo "=== Debug keystore ==="
           test -s "$HOME/.android/debug.keystore"
+          echo "=== Android export template files ==="
+          ls -lh "$HOME/.local/share/godot/export_templates/4.3.stable/android_"* || true
           echo "=== Godot editor diagnostics ==="
           godot --headless --verbose --path clean-zone --editor --quit || true
       - name: Start Android Debug Bridge
@@ -77,7 +79,10 @@ jobs:
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p clean-zone/build
-          godot --headless --verbose --path clean-zone --export-debug Android build/LAST-ZONE-REBORN.apk
+          echo "=== Export environment ==="
+          printf "ANDROID_HOME=%s\\nJAVA_HOME=%s\\n" "$ANDROID_HOME" "$JAVA_HOME"
+          echo "=== Android export with verbose diagnostics ==="
+          godot --headless --verbose --path clean-zone --export-debug "Android" build/LAST-ZONE-REBORN.apk
           test -s clean-zone/build/LAST-ZONE-REBORN.apk
           "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify clean-zone/build/LAST-ZONE-REBORN.apk
       - uses: actions/upload-artifact@v4
