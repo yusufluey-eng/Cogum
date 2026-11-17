@@ -67,6 +67,8 @@ jobs:
           ls -lh "$HOME/.local/share/godot/export_templates/4.3.stable/android_"* || true
           echo "=== Godot editor diagnostics ==="
           godot --headless --verbose --path clean-zone --editor --quit || true
+          echo "=== Export preset validation script ==="
+          godot --headless --path clean-zone --editor --script res://diagnose_export.gd || true
       - name: Start Android Debug Bridge
         run: |
           unset ADB_SERVER_SOCKET
