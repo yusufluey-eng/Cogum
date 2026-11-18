@@ -83,8 +83,11 @@ jobs:
           mkdir -p clean-zone/build
           echo "=== Export environment ==="
           printf "ANDROID_HOME=%s\\nJAVA_HOME=%s\\n" "$ANDROID_HOME" "$JAVA_HOME"
+          echo "=== Android SDK and Java checks ==="
+          test -f "$ANDROID_HOME/platforms/android-34/android.jar"
+          test -x "$JAVA_HOME/bin/java"
           echo "=== Android export with verbose diagnostics ==="
-          godot --headless --verbose --path clean-zone --export-debug "Android" build/LAST-ZONE-REBORN.apk
+          godot --headless --verbose --path clean-zone --editor --export-debug "Android" build/LAST-ZONE-REBORN.apk
           test -s clean-zone/build/LAST-ZONE-REBORN.apk
           "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify clean-zone/build/LAST-ZONE-REBORN.apk
       - uses: actions/upload-artifact@v4
